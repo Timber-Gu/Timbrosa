@@ -10,12 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const volumeBtn = document.querySelector('.volume-btn');
     const trackCards = document.querySelectorAll('.track-card');
     const featuredItems = document.querySelectorAll('.featured-item');
+    const audioPlayer = document.getElementById('audio-player');
 
     // State
     let isPlaying = false;
     let currentVolume = 0.7; // 70%
     let isMuted = false;
     let previousVolume = currentVolume;
+
+    // Set initial volume
+    audioPlayer.volume = currentVolume;
 
     // Toggle play/pause
     playPauseBtn.addEventListener('click', togglePlayPause);
@@ -25,27 +29,32 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (isPlaying) {
             playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            // In a real app, you would start playing the audio here
+            audioPlayer.play();
         } else {
             playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-            // In a real app, you would pause the audio here
+            audioPlayer.pause();
         }
     }
 
+    // Update progress bar as audio plays
+    audioPlayer.addEventListener('timeupdate', updateProgress);
+
     // Update progress bar
-    function updateProgress(e) {
-        const { duration, currentTime } = e.target;
-        const progressPercent = (currentTime / duration) * 100;
-        progressBar.style.width = `${progressPercent}%`;
-        
-        // Update time displays
-        const currentMinutes = Math.floor(currentTime / 60);
-        const currentSeconds = Math.floor(currentTime % 60);
-        currentTimeEl.textContent = `${currentMinutes}:${currentSeconds < 10 ? '0' : ''}${currentSeconds}`;
-        
-        const totalMinutes = Math.floor(duration / 60);
-        const totalSeconds = Math.floor(duration % 60);
-        totalTimeEl.textContent = `${totalMinutes}:${totalSeconds < 10 ? '0' : ''}${totalSeconds}`;
+    function updateProgress() {
+        const { duration, currentTime } = audioPlayer;
+        if (duration) {
+            const progressPercent = (currentTime / duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            
+            // Update time displays
+            const currentMinutes = Math.floor(currentTime / 60);
+            const currentSeconds = Math.floor(currentTime % 60);
+            currentTimeEl.textContent = `${currentMinutes}:${currentSeconds < 10 ? '0' : ''}${currentSeconds}`;
+            
+            const totalMinutes = Math.floor(duration / 60);
+            const totalSeconds = Math.floor(duration % 60);
+            totalTimeEl.textContent = `${totalMinutes}:${totalSeconds < 10 ? '0' : ''}${totalSeconds}`;
+        }
     }
 
     // Set progress when clicking on progress bar
@@ -54,11 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function setProgress(e) {
         const width = this.clientWidth;
         const clickX = e.offsetX;
-        const progressPercent = (clickX / width) * 100;
-        progressBar.style.width = `${progressPercent}%`;
-        
-        // In a real app, you would set the audio currentTime here
-        // audio.currentTime = (clickX / width) * audio.duration;
+        const duration = audioPlayer.duration;
+        audioPlayer.currentTime = (clickX / width) * duration;
     }
 
     // Volume controls
@@ -70,8 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentVolume = clickX / width;
         volumeLevel.style.width = `${currentVolume * 100}%`;
         
-        // In a real app, you would set the audio volume here
-        // audio.volume = currentVolume;
+        audioPlayer.volume = currentVolume;
         
         // Update volume icon based on level
         updateVolumeIcon();
@@ -87,14 +92,13 @@ document.addEventListener('DOMContentLoaded', () => {
             currentVolume = 0;
             volumeLevel.style.width = '0%';
             volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            audioPlayer.volume = 0;
         } else {
             currentVolume = previousVolume;
             volumeLevel.style.width = `${currentVolume * 100}%`;
             updateVolumeIcon();
+            audioPlayer.volume = currentVolume;
         }
-        
-        // In a real app, you would set the audio volume here
-        // audio.volume = currentVolume;
     }
     
     function updateVolumeIcon() {
@@ -142,47 +146,25 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Simulate progress for demo purposes
-    let progressInterval;
-    
-    function startProgressSimulation() {
-        let progress = 0;
-        progressInterval = setInterval(() => {
-            progress += 0.5;
-            if (progress > 100) {
-                clearInterval(progressInterval);
-                isPlaying = false;
-                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-                return;
-            }
-            progressBar.style.width = `${progress}%`;
-            
-            // Update time display
-            const totalSeconds = 225; // 3:45 in seconds
-            const currentSeconds = Math.floor((progress / 100) * totalSeconds);
-            const currentMinutes = Math.floor(currentSeconds / 60);
-            const remainingSeconds = currentSeconds % 60;
-            currentTimeEl.textContent = `${currentMinutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
-        }, 1000);
-    }
-    
-    function stopProgressSimulation() {
-        clearInterval(progressInterval);
-    }
-    
-    // Start/stop progress simulation when play/pause is clicked
-    playPauseBtn.addEventListener('click', () => {
-        if (isPlaying) {
-            startProgressSimulation();
-        } else {
-            stopProgressSimulation();
-        }
+    // Handle audio ending
+    audioPlayer.addEventListener('ended', () => {
+        isPlaying = false;
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        progressBar.style.width = '0%';
+        currentTimeEl.textContent = '0:00';
+    });
+
+    // Load audio metadata when available
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        const duration = audioPlayer.duration;
+        const totalMinutes = Math.floor(duration / 60);
+        const totalSeconds = Math.floor(duration % 60);
+        totalTimeEl.textContent = `${totalMinutes}:${totalSeconds < 10 ? '0' : ''}${totalSeconds}`;
     });
 
     // Initialize time display
     currentTimeEl.textContent = '0:00';
-    totalTimeEl.textContent = '3:45';
-
+    
     // Initialize volume display
     volumeLevel.style.width = `${currentVolume * 100}%`;
 }); 
