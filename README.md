@@ -1,4 +1,4 @@
-# Melodify - Elegant Music App
+# Timbrosa - Elegant Music App
 
 A concise and elegant web-based music player application with a modern UI.
 
