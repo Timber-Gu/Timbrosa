@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegant Music App</title>
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>Melodify</h1>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li class="active"><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-search"></i> Search</a></li>
+                    <li><a href="#"><i class="fas fa-bookmark"></i> Library</a></li>
+                    <li><a href="#"><i class="fas fa-plus-square"></i> Create Playlist</a></li>
+                    <li><a href="#"><i class="fas fa-heart"></i> Liked Songs</a></li>
+                </ul>
+            </nav>
+            <div class="playlists">
+                <h3>Playlists</h3>
+                <ul>
+                    <li><a href="#">Chill Vibes</a></li>
+                    <li><a href="#">Workout Mix</a></li>
+                    <li><a href="#">Focus Time</a></li>
+                    <li><a href="#">Party Hits</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header class="top-bar">
+                <div class="navigation-controls">
+                    <button class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="user-controls">
+                    <button class="user-btn"><i class="fas fa-user"></i> Profile</button>
+                    <button class="settings-btn"><i class="fas fa-cog"></i></button>
+                </div>
+            </header>
+
+            <section class="featured">
+                <h2>Good afternoon</h2>
+                <div class="featured-grid">
+                    <div class="featured-item">
+                        <img src="src/assets/placeholder1.jpg" alt="Album cover">
+                        <h3>Recently Played</h3>
+                    </div>
+                    <div class="featured-item">
+                        <img src="src/assets/placeholder2.jpg" alt="Album cover">
+                        <h3>Top Hits</h3>
+                    </div>
+                    <div class="featured-item">
+                        <img src="src/assets/placeholder3.jpg" alt="Album cover">
+                        <h3>Discover Weekly</h3>
+                    </div>
+                    <div class="featured-item">
+                        <img src="src/assets/placeholder4.jpg" alt="Album cover">
+                        <h3>New Releases</h3>
+                    </div>
+                </div>
+            </section>
+
+            <section class="recently-played">
+                <div class="section-header">
+                    <h2>Recently played</h2>
+                    <a href="#" class="see-all">See all</a>
+                </div>
+                <div class="track-grid">
+                    <div class="track-card">
+                        <div class="track-artwork">
+                            <img src="src/assets/track1.jpg" alt="Track artwork">
+                            <button class="play-btn"><i class="fas fa-play"></i></button>
+                        </div>
+                        <h4>Song Title</h4>
+                        <p>Artist Name</p>
+                    </div>
+                    <div class="track-card">
+                        <div class="track-artwork">
+                            <img src="src/assets/track2.jpg" alt="Track artwork">
+                            <button class="play-btn"><i class="fas fa-play"></i></button>
+                        </div>
+                        <h4>Song Title</h4>
+                        <p>Artist Name</p>
+                    </div>
+                    <div class="track-card">
+                        <div class="track-artwork">
+                            <img src="src/assets/track3.jpg" alt="Track artwork">
+                            <button class="play-btn"><i class="fas fa-play"></i></button>
+                        </div>
+                        <h4>Song Title</h4>
+                        <p>Artist Name</p>
+                    </div>
+                    <div class="track-card">
+                        <div class="track-artwork">
+                            <img src="src/assets/track4.jpg" alt="Track artwork">
+                            <button class="play-btn"><i class="fas fa-play"></i></button>
+                        </div>
+                        <h4>Song Title</h4>
+                        <p>Artist Name</p>
+                    </div>
+                    <div class="track-card">
+                        <div class="track-artwork">
+                            <img src="src/assets/track5.jpg" alt="Track artwork">
+                            <button class="play-btn"><i class="fas fa-play"></i></button>
+                        </div>
+                        <h4>Song Title</h4>
+                        <p>Artist Name</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="player">
+            <div class="now-playing">
+                <img src="src/assets/current-track.jpg" alt="Current track" class="current-artwork">
+                <div class="track-info">
+                    <h4>Current Song</h4>
+                    <p>Current Artist</p>
+                </div>
+                <button class="like-btn"><i class="far fa-heart"></i></button>
+            </div>
+            <div class="player-controls">
+                <div class="control-buttons">
+                    <button class="control-btn"><i class="fas fa-random"></i></button>
+                    <button class="control-btn"><i class="fas fa-step-backward"></i></button>
+                    <button class="control-btn play-pause"><i class="fas fa-play"></i></button>
+                    <button class="control-btn"><i class="fas fa-step-forward"></i></button>
+                    <button class="control-btn"><i class="fas fa-redo-alt"></i></button>
+                </div>
+                <div class="progress-container">
+                    <span class="current-time">0:00</span>
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    <span class="total-time">3:45</span>
+                </div>
+            </div>
+            <div class="volume-controls">
+                <button class="volume-btn"><i class="fas fa-volume-up"></i></button>
+                <div class="volume-bar">
+                    <div class="volume-level"></div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="src/app.js"></script>
+</body>
+</html> 
