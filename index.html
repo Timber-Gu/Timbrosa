@@ -237,6 +237,8 @@
 
     <!-- Load scripts in correct order -->
     <script src="src/config.js"></script>
+    <!-- Load local config if it exists (for development) -->
+    <script src="src/config.local.js" onerror="console.log('No local config found - using default config')"></script>
     <script src="src/youtube-api-service.js"></script>
     <script src="src/app.js"></script>
     <script src="src/youtube-integration.js"></script>

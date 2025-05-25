@@ -1,7 +1,10 @@
 // Configuration file for Timbrosa Music App
 const CONFIG = {
     // YouTube Data API v3 Configuration
-    YOUTUBE_API_KEY: 'YOUR_YOUTUBE_API_KEY_HERE', // Replace with your actual API key
+    // Try to get API key from environment variable first, then fallback to placeholder
+    YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY || 
+                     (typeof window !== 'undefined' && window.YOUTUBE_API_KEY) || 
+                     'YOUR_YOUTUBE_API_KEY_HERE', // Replace with your actual API key for local development
     YOUTUBE_API_BASE_URL: 'https://www.googleapis.com/youtube/v3',
     
     // Default search parameters
