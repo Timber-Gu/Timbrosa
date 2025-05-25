@@ -111,6 +111,146 @@
             border-radius: 4px;
             font-size: 11px;
         }
+        
+        /* API Key Setup Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.show .modal {
+            transform: scale(1);
+        }
+        
+        .modal h2 {
+            color: #ff6b35;
+            margin: 0 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal p {
+            color: #ccc;
+            line-height: 1.6;
+            margin: 15px 0;
+        }
+        
+        .modal .highlight {
+            background: rgba(255, 107, 53, 0.1);
+            border-left: 4px solid #ff6b35;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        
+        .modal .steps {
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .modal .steps ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .modal .steps li {
+            margin: 10px 0;
+            color: #ddd;
+        }
+        
+        .modal .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .modal button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .modal button:hover {
+            background: #e55a2b;
+        }
+        
+        .modal button.secondary {
+            background: #555;
+        }
+        
+        .modal button.secondary:hover {
+            background: #666;
+        }
+        
+        .modal .code {
+            background: #1a1a1a;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #ff6b35;
+            margin: 10px 0;
+            word-break: break-all;
+        }
+        
+        .no-api-banner {
+            background: linear-gradient(135deg, #ff6b35, #e55a2b);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .no-api-banner:hover {
+            background: linear-gradient(135deg, #e55a2b, #d14d20);
+        }
+        
+        .no-api-banner i {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
@@ -233,6 +373,61 @@
             <!-- YouTube player container (hidden) -->
             <div id="youtube-player"></div>
         </footer>
+    </div>
+
+    <!-- API Key Setup Modal -->
+    <div id="apiKeyModal" class="modal-overlay">
+        <div class="modal">
+            <h2><i class="fas fa-key"></i> YouTube API Key Required</h2>
+            
+            <p>To play real music from YouTube, you need to set up a YouTube Data API key. Don't worry, it's free and takes just a few minutes!</p>
+            
+            <div class="highlight">
+                <strong>🎵 What you'll get:</strong>
+                <ul>
+                    <li>Real music from YouTube</li>
+                    <li>Search any song, artist, or album</li>
+                    <li>Trending music discovery</li>
+                    <li>High-quality audio and artwork</li>
+                </ul>
+            </div>
+            
+            <div class="steps">
+                <h3>Quick Setup (2 minutes):</h3>
+                <ol>
+                    <li>Get a free API key from <a href="https://console.cloud.google.com/" target="_blank" style="color: #ff6b35;">Google Cloud Console</a></li>
+                    <li>Copy the example config file</li>
+                    <li>Add your API key to the local config</li>
+                    <li>Refresh and enjoy real music!</li>
+                </ol>
+            </div>
+            
+            <p><strong>Copy this command to your terminal:</strong></p>
+            <div class="code" id="copyCommand">cp src/config.local.example.js src/config.local.js</div>
+            
+            <p>Then edit <code>src/config.local.js</code> and add your API key.</p>
+            
+            <div class="buttons">
+                <button onclick="openSetupGuide()">
+                    <i class="fas fa-book"></i> Setup Guide
+                </button>
+                <button onclick="openGoogleConsole()">
+                    <i class="fas fa-external-link-alt"></i> Get API Key
+                </button>
+                <button onclick="testWithoutAPI()" class="secondary">
+                    <i class="fas fa-play"></i> Try Demo Mode
+                </button>
+                <button onclick="closeModal()" class="secondary">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- No API Key Banner -->
+    <div id="noApiBanner" class="no-api-banner" onclick="showAPIKeyModal()" style="display: none;">
+        <i class="fas fa-exclamation-triangle"></i>
+        Click here to set up YouTube API for real music content
     </div>
 
     <!-- Load scripts in correct order -->

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube API Key Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .container {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .success { background: #27ae60; color: white; }
+        .error { background: #e74c3c; color: white; }
+        .loading { background: #f39c12; color: white; }
+        .info { background: #3498db; color: white; }
+        button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover { background: #e55a2b; }
+        .results {
+            background: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        pre { margin: 0; white-space: pre-wrap; }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 4px solid #ff6b35;
+            background: rgba(255, 107, 53, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔑 YouTube API Key Tester</h1>
+        <p>This tool will test your YouTube Data API v3 key to make sure it's working correctly.</p>
+        
+        <div id="status" class="status info">
+            Ready to test your API key...
+        </div>
+        
+        <button onclick="testAPIKey()">🧪 Test API Key</button>
+        <button onclick="testSearch()">🔍 Test Search</button>
+        <button onclick="testTrending()">📈 Test Trending</button>
+        <button onclick="clearResults()">🗑️ Clear Results</button>
+        
+        <div id="results" class="results" style="display: none;">
+            <h3>Test Results:</h3>
+            <div id="output"></div>
+        </div>
+    </div>
+
+    <!-- Load your config files -->
+    <script src="src/config.js"></script>
+    <script src="src/config.local.js" onerror="console.log('No local config found')"></script>
+    <script src="src/youtube-api-service.js"></script>
+
+    <script>
+        function updateStatus(message, type = 'info') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+
+        function addResult(title, data, success = true) {
+            const results = document.getElementById('results');
+            const output = document.getElementById('output');
+            
+            results.style.display = 'block';
+            
+            const item = document.createElement('div');
+            item.className = 'test-item';
+            item.innerHTML = `
+                <h4>${success ? '✅' : '❌'} ${title}</h4>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+            
+            output.appendChild(item);
+            results.scrollTop = results.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('output').innerHTML = '';
+            document.getElementById('results').style.display = 'none';
+        }
+
+        async function testAPIKey() {
+            updateStatus('Testing API key...', 'loading');
+            
+            try {
+                // Check if API key is configured
+                if (!youtubeAPI.isConfigured()) {
+                    throw new Error('API key not configured. Please check your config.local.js file.');
+                }
+
+                // Test basic API connectivity
+                const response = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=dQw4w9WgXcQ&key=${CONFIG.YOUTUBE_API_KEY}`);
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API Error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+                }
+
+                const data = await response.json();
+                
+                updateStatus('✅ API key is valid and working!', 'success');
+                addResult('API Key Test', {
+                    status: 'SUCCESS',
+                    apiKey: CONFIG.YOUTUBE_API_KEY.substring(0, 10) + '...',
+                    quotaUsed: '1 unit',
+                    testVideo: data.items[0]?.snippet?.title || 'Test video found'
+                });
+
+            } catch (error) {
+                updateStatus(`❌ API key test failed: ${error.message}`, 'error');
+                addResult('API Key Test', {
+                    status: 'FAILED',
+                    error: error.message,
+                    apiKey: CONFIG.YOUTUBE_API_KEY ? CONFIG.YOUTUBE_API_KEY.substring(0, 10) + '...' : 'Not configured'
+                }, false);
+            }
+        }
+
+        async function testSearch() {
+            updateStatus('Testing search functionality...', 'loading');
+            
+            try {
+                const results = await youtubeAPI.searchMusic('test music', 5);
+                
+                updateStatus('✅ Search test successful!', 'success');
+                addResult('Search Test', {
+                    status: 'SUCCESS',
+                    query: 'test music',
+                    resultsCount: results.length,
+                    firstResult: results[0] ? {
+                        title: results[0].title,
+                        artist: results[0].artist,
+                        id: results[0].id
+                    } : 'No results'
+                });
+
+            } catch (error) {
+                updateStatus(`❌ Search test failed: ${error.message}`, 'error');
+                addResult('Search Test', {
+                    status: 'FAILED',
+                    error: error.message
+                }, false);
+            }
+        }
+
+        async function testTrending() {
+            updateStatus('Testing trending music...', 'loading');
+            
+            try {
+                const results = await youtubeAPI.getTrendingMusic(5);
+                
+                updateStatus('✅ Trending test successful!', 'success');
+                addResult('Trending Test', {
+                    status: 'SUCCESS',
+                    resultsCount: results.length,
+                    firstTrending: results[0] ? {
+                        title: results[0].title,
+                        artist: results[0].artist,
+                        viewCount: results[0].viewCount
+                    } : 'No results'
+                });
+
+            } catch (error) {
+                updateStatus(`❌ Trending test failed: ${error.message}`, 'error');
+                addResult('Trending Test', {
+                    status: 'FAILED',
+                    error: error.message
+                }, false);
+            }
+        }
+
+        // Auto-test on page load
+        window.addEventListener('load', () => {
+            if (youtubeAPI.isConfigured()) {
+                updateStatus('API key detected! Click "Test API Key" to verify.', 'info');
+            } else {
+                updateStatus('❌ No API key found. Please check your config.local.js file.', 'error');
+            }
+        });
+    </script>
+</body>
+</html> 

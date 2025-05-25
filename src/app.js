@@ -33,10 +33,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             // Check if YouTube API is configured
             if (!youtubeAPI.isConfigured()) {
-                showAPIKeyWarning();
+                showNoAPIBanner();
                 loadDemoContent();
                 return;
             }
+
+            // Hide API banner if key is configured
+            hideNoAPIBanner();
 
             // Load real content from YouTube
             await loadFeaturedContent();
@@ -141,6 +144,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Play a specific track
     async function playTrack(track) {
         try {
+            // Check if API key is configured for real tracks
+            if (!youtubeAPI.isConfigured() && !track.id.startsWith('demo')) {
+                showAPIKeyModal();
+                return;
+            }
+
             currentTrack = track;
             
             // Update now playing display
@@ -219,6 +228,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Perform search
     async function performSearch(query) {
         try {
+            // Check if API key is configured
+            if (!youtubeAPI.isConfigured()) {
+                showAPIKeyModal();
+                return;
+            }
+
             showLoadingState();
             const searchResults = await youtubeAPI.searchMusic(query, 20);
             playlist = searchResults;
@@ -241,21 +256,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Hide loading state
     function hideLoadingState() {
         // Loading state will be replaced by search results
-    }
-
-    // Show API key warning
-    function showAPIKeyWarning() {
-        const warning = document.createElement('div');
-        warning.className = 'api-warning';
-        warning.innerHTML = `
-            <div class="warning-content">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h3>YouTube API Key Required</h3>
-                <p>To load real music content, please add your YouTube Data API key to <code>src/config.js</code></p>
-                <p>For now, showing demo content.</p>
-            </div>
-        `;
-        document.body.appendChild(warning);
     }
 
     // Show error message
@@ -457,4 +457,73 @@ document.addEventListener('DOMContentLoaded', async () => {
         playlist,
         currentTrackIndex
     };
+
+    // Modal and Banner Management Functions
+    function showAPIKeyModal() {
+        const modal = document.getElementById('apiKeyModal');
+        if (modal) {
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('apiKeyModal');
+        if (modal) {
+            modal.classList.remove('show');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+    }
+
+    function showNoAPIBanner() {
+        const banner = document.getElementById('noApiBanner');
+        if (banner) {
+            banner.style.display = 'block';
+        }
+    }
+
+    function hideNoAPIBanner() {
+        const banner = document.getElementById('noApiBanner');
+        if (banner) {
+            banner.style.display = 'none';
+        }
+    }
+
+    function openSetupGuide() {
+        window.open('SETUP_GUIDE.md', '_blank');
+    }
+
+    function openGoogleConsole() {
+        window.open('https://console.cloud.google.com/apis/library/youtube.googleapis.com', '_blank');
+    }
+
+    function testWithoutAPI() {
+        closeModal();
+        // Load demo content and hide banner temporarily
+        loadDemoContent();
+        hideNoAPIBanner();
+        showErrorMessage('Demo mode activated. Set up API key for real music content.');
+    }
+
+    // Make modal functions globally available
+    window.showAPIKeyModal = showAPIKeyModal;
+    window.closeModal = closeModal;
+    window.openSetupGuide = openSetupGuide;
+    window.openGoogleConsole = openGoogleConsole;
+    window.testWithoutAPI = testWithoutAPI;
+
+    // Close modal when clicking outside
+    document.addEventListener('click', (e) => {
+        const modal = document.getElementById('apiKeyModal');
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
 }); 
