@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timbrosa - Elegant Music App</title>
+    <link rel="stylesheet" href="src/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Additional styles for YouTube integration */
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 8px 16px;
+            margin-left: 12px;
+        }
+        
+        .search-container i {
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+        
+        .search-input {
+            background: none;
+            border: none;
+            color: white;
+            outline: none;
+            width: 200px;
+            font-size: 14px;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .api-warning {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ff6b35;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .warning-content h3 {
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .warning-content p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        
+        .warning-content code {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        
+        .error-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #b3b3b3;
+            font-size: 16px;
+        }
+        
+        .duration {
+            font-size: 12px;
+            color: #b3b3b3;
+            margin-top: 4px;
+            display: block;
+        }
+        
+        .track-card {
+            position: relative;
+        }
+        
+        .track-card .duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>Timbrosa</h1>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li class="active"><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#"><i class="fas fa-search"></i> Search</a></li>
+                    <li><a href="#"><i class="fas fa-bookmark"></i> Library</a></li>
+                    <li><a href="#"><i class="fas fa-plus-square"></i> Create Playlist</a></li>
+                    <li><a href="#"><i class="fas fa-heart"></i> Liked Songs</a></li>
+                </ul>
+            </nav>
+            <div class="playlists">
+                <h3>Playlists</h3>
+                <ul>
+                    <li><a href="#">Chill Vibes</a></li>
+                    <li><a href="#">Workout Mix</a></li>
+                    <li><a href="#">Focus Time</a></li>
+                    <li><a href="#">Party Hits</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="content">
+            <header class="top-bar">
+                <div class="navigation-controls">
+                    <button class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+                    <button class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="user-controls">
+                    <button class="user-btn"><i class="fas fa-user"></i> Profile</button>
+                    <button class="settings-btn"><i class="fas fa-cog"></i></button>
+                </div>
+            </header>
+
+            <section class="featured">
+                <h2>Featured Music</h2>
+                <div class="featured-grid">
+                    <!-- Featured content will be loaded dynamically -->
+                    <div class="featured-item">
+                        <img src="src/assets/placeholder1.jpg" alt="Loading...">
+                        <h3>Loading...</h3>
+                    </div>
+                    <div class="featured-item">
+                        <img src="src/assets/placeholder2.jpg" alt="Loading...">
+                        <h3>Loading...</h3>
+                    </div>
+                    <div class="featured-item">
+                        <img src="src/assets/placeholder3.jpg" alt="Loading...">
+                        <h3>Loading...</h3>
+                    </div>
+                    <div class="featured-item">
+                        <img src="src/assets/placeholder4.jpg" alt="Loading...">
+                        <h3>Loading...</h3>
+                    </div>
+                </div>
+            </section>
+
+            <section class="recently-played">
+                <div class="section-header">
+                    <h2>Trending Music</h2>
+                    <a href="#" class="see-all">See all</a>
+                </div>
+                <div class="track-grid">
+                    <!-- Track content will be loaded dynamically -->
+                    <div class="track-card">
+                        <div class="track-artwork">
+                            <img src="src/assets/track1.jpg" alt="Loading...">
+                            <button class="play-btn"><i class="fas fa-play"></i></button>
+                        </div>
+                        <h4>Loading...</h4>
+                        <p>Loading...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="player">
+            <div class="now-playing">
+                <img src="src/assets/current-track.jpg" alt="Current track" class="current-artwork">
+                <div class="track-info">
+                    <h4>Select a song to play</h4>
+                    <p>Timbrosa</p>
+                </div>
+                <button class="like-btn"><i class="far fa-heart"></i></button>
+            </div>
+            <div class="player-controls">
+                <div class="control-buttons">
+                    <button class="control-btn"><i class="fas fa-random"></i></button>
+                    <button class="control-btn"><i class="fas fa-step-backward"></i></button>
+                    <button class="control-btn play-pause"><i class="fas fa-play"></i></button>
+                    <button class="control-btn"><i class="fas fa-step-forward"></i></button>
+                    <button class="control-btn"><i class="fas fa-redo-alt"></i></button>
+                </div>
+                <div class="progress-container">
+                    <span class="current-time">0:00</span>
+                    <div class="progress-bar">
+                        <div class="progress"></div>
+                    </div>
+                    <span class="total-time">0:00</span>
+                </div>
+            </div>
+            <div class="volume-controls">
+                <button class="volume-btn"><i class="fas fa-volume-up"></i></button>
+                <div class="volume-bar">
+                    <div class="volume-level"></div>
+                </div>
+            </div>
+            <!-- Hidden audio element for playing music (fallback) -->
+            <audio id="audio-player" style="display: none;">
+                <source src="src/assets/audio/placeholder-track.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            
+            <!-- YouTube player container (hidden) -->
+            <div id="youtube-player"></div>
+        </footer>
+    </div>
+
+    <!-- Load scripts in correct order -->
+    <script src="src/config.js"></script>
+    <script src="src/youtube-api-service.js"></script>
+    <script src="src/app.js"></script>
+    <script src="src/youtube-integration.js"></script>
+</body>
+</html> 
