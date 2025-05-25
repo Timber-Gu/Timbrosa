@@ -188,10 +188,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📞 Support
 
 If you encounter issues:
-1. Check the [Setup Guide](YOUTUBE_API_SETUP.md)
-2. Review browser console for errors
-3. Verify API configuration
-4. Check quota usage in Google Cloud Console
+1. Contact me: gsmcq@uw.edu
+2. Check the [Setup Guide](YOUTUBE_API_SETUP.md)
+3. Review browser console for errors
+4. Verify API configuration
+5. Check quota usage in Google Cloud Console
 
 ---
 
