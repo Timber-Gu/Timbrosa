@@ -27,30 +27,18 @@ A sophisticated web-based music player application with YouTube Music API integr
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-- YouTube Data API v3 key (for real music content)
+### Option 1: Try Demo Mode (Instant)
+1. Open `index.html` in your browser
+2. Click "Try Demo Mode" when prompted
+3. Explore with sample content
 
-### Installation
+### Option 2: Full Setup (2 minutes)
+1. Get a free YouTube API key from [Google Cloud Console](https://console.cloud.google.com/)
+2. Copy `src/config.local.example.js` to `src/config.local.js`
+3. Add your API key to the config file
+4. Open `index.html` and enjoy real music!
 
-1. **Clone or download this repository**
-   ```bash
-   git clone https://github.com/yourusername/timbrosa.git
-   cd timbrosa
-   ```
-
-2. **Get a YouTube Data API key** (see [Setup Guide](YOUTUBE_API_SETUP.md))
-   - Go to [Google Cloud Console](https://console.cloud.google.com/)
-   - Create a project and enable YouTube Data API v3
-   - Generate an API key
-
-3. **Configure the app**
-   - Open `src/config.js`
-   - Replace `YOUR_YOUTUBE_API_KEY_HERE` with your actual API key
-
-4. **Run the app**
-   - Open `index.html` in your web browser
-   - Start discovering and playing music!
+📖 **Detailed Guide**: See [USER_GUIDE.md](USER_GUIDE.md) for complete instructions
 
 ## 📁 Project Structure
 
